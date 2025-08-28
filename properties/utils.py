@@ -3,7 +3,8 @@ from django_redis import get_redis_connection
 from .models import Property
 import logging
 
-# Configure logging
+# Configure logger
+logger = logging.getLogger('cache_metrics')
 logging.basicConfig(
     filename='/tmp/cache_metrics_log.txt',
     level=logging.INFO,
@@ -39,7 +40,7 @@ def get_redis_cache_metrics():
         hit_ratio = (keyspace_hits / total_requests) if total_requests > 0 else 0.0
         
         # Log metrics
-        logging.info(
+        logger.info(
             '',
             extra={
                 'hits': keyspace_hits,
@@ -56,7 +57,7 @@ def get_redis_cache_metrics():
         }
     
     except Exception as e:
-        logging.error(f'Error retrieving cache metrics: {str(e)}')
+        logger.error(f'Error retrieving cache metrics: {str(e)}')
         return {
             'keyspace_hits': 0,
             'keyspace_misses': 0,
